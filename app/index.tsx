@@ -1,8 +1,10 @@
 // https://medium.com/the-react-native-log/organizing-a-react-native-project-9514dfadaa0
 import 'react-native-gesture-handler';
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
+
+import AsyncStorage from '@react-native-community/async-storage';
 
 import HomeScreen from './screens/HomeScreen';
 import LoginScreen from './screens/LoginScreen';
@@ -25,8 +27,16 @@ const LoginStack = () => (
   </Stack.Navigator>
 );
 
+const URL = 'https://carlistapi.azurewebsites.net/api';
 const App = () => {
-  const authenticated = true;
+  const [authenticated, setAuthenticated] = useState(false);
+  useEffect(() => {
+    (async function anyNameFunction() {
+      const token = await AsyncStorage.getItem('token');
+      setAuthenticated(Boolean(token));
+    })();
+  }, []);
+  console.log('authenticated--->', authenticated)
   return (
     <NavigationContainer>
       {authenticated
