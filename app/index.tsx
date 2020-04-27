@@ -27,7 +27,6 @@ const LoginStack = () => (
   </Stack.Navigator>
 );
 
-const URL = 'https://carlistapi.azurewebsites.net/api';
 const App = () => {
   const [authenticated, setAuthenticated] = useState(false);
   useEffect(() => {

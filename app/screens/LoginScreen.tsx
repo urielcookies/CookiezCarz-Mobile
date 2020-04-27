@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import {Text, TextInput, TouchableOpacity, View} from 'react-native'
 import axios from 'axios';
+import {login} from '../api/auth';
 
 const URL = 'https://carlistapi.azurewebsites.net/api';
 const Login = (props: any) => {
@@ -17,6 +18,16 @@ const Login = (props: any) => {
       email,
       password,
     }), ));
+
+  // const LoginHandler = () => {
+
+  //   const data = JSON.stringify({email, password})
+  //   return login(data)
+  //     .then((response: {data: string}) => {
+  //       console.log('--->', response.data);
+  //     })
+  //     .catch((error: object) => console.log('ERRORZ', error, data));
+  // }
 
   return (
     <>
