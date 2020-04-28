@@ -1,33 +1,21 @@
 import React, {useState} from 'react'
 import {Text, TextInput, TouchableOpacity, View} from 'react-native'
-import axios from 'axios';
+import AsyncStorage from '@react-native-community/async-storage';
 import {login} from '../api/auth';
 
-const URL = 'https://carlistapi.azurewebsites.net/api';
-const Login = (props: any) => {
+const Login = ({setAuthenticated}: {setAuthenticated: Function}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const data = JSON.stringify({email, password})
-  // const LoginHandler = () => props.navigation.navigate('Home'); //getuserinfo
-  const LoginHandler = () => axios.post(`${URL}/useraccounts/login`, data, {headers: {'Content-Type': 'application/json'}})
-    .then((response: {data: any}) => {
-      // handle success
-      console.log('--->', response.data);
-    })
-    .catch((error: object) => console.log('ERRORZ', error, JSON.stringify({
-      email,
-      password,
-    }), ));
 
-  // const LoginHandler = () => {
-
-  //   const data = JSON.stringify({email, password})
-  //   return login(data)
-  //     .then((response: {data: string}) => {
-  //       console.log('--->', response.data);
-  //     })
-  //     .catch((error: object) => console.log('ERRORZ', error, data));
-  // }
+  const LoginHandler = () => {
+    const data = JSON.stringify({email, password})
+    login(data)
+      .then(async ({data}: {data: string}) => {
+        await AsyncStorage.setItem('token', data)
+        setAuthenticated(true);
+      })
+      .catch((error: object) => console.log(error));
+  }
 
   return (
     <>

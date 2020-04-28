@@ -21,9 +21,9 @@ const HomeStack = () => (
   </Stack.Navigator>
 );
 
-const LoginStack = () => (
+const LoginStack = ({setAuthenticated}: {setAuthenticated: Function}) => (
   <Stack.Navigator  initialRouteName="Login">
-    <Stack.Screen name="Login" component={LoginScreen} />
+    <Stack.Screen name="Login" component={() => <LoginScreen setAuthenticated={setAuthenticated}/>} />
   </Stack.Navigator>
 );
 
@@ -34,13 +34,13 @@ const App = () => {
       const token = await AsyncStorage.getItem('token');
       setAuthenticated(Boolean(token));
     })();
-  }, []);
-  console.log('authenticated--->', authenticated)
+  }, [authenticated]);
+
   return (
     <NavigationContainer>
       {authenticated
       ? (<HomeStack />)
-      : (<LoginStack />)}
+      : (<LoginStack setAuthenticated={setAuthenticated} />)}
     </NavigationContainer>
   );
 };
