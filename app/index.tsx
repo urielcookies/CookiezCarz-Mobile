@@ -1,6 +1,7 @@
 // https://medium.com/the-react-native-log/organizing-a-react-native-project-9514dfadaa0
 import 'react-native-gesture-handler';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, FunctionComponent} from 'react';
+import {ThemeProvider} from 'react-native-elements';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
@@ -21,11 +22,14 @@ const HomeStack = () => (
   </Stack.Navigator>
 );
 
-const LoginStack = ({setAuthenticated}: {setAuthenticated: Function}) => (
-  <Stack.Navigator  initialRouteName="Login">
-    <Stack.Screen name="Login" component={() => <LoginScreen setAuthenticated={setAuthenticated}/>} />
-  </Stack.Navigator>
-);
+const LoginStack = ({setAuthenticated}: {setAuthenticated: Function}) => {
+  const Component = () => <LoginScreen setAuthenticated={setAuthenticated}/>
+  return(
+    <Stack.Navigator  initialRouteName="Login">
+      <Stack.Screen name="Login" component={Component} />
+    </Stack.Navigator>
+  )
+}
 
 const App = () => {
   const [authenticated, setAuthenticated] = useState(false);
@@ -37,11 +41,13 @@ const App = () => {
   }, [authenticated]);
 
   return (
-    <NavigationContainer>
-      {authenticated
-      ? (<HomeStack />)
-      : (<LoginStack setAuthenticated={setAuthenticated} />)}
-    </NavigationContainer>
+    <ThemeProvider>
+      <NavigationContainer>
+        {authenticated
+        ? (<HomeStack />)
+        : (<LoginStack setAuthenticated={setAuthenticated} />)}
+      </NavigationContainer>
+    </ThemeProvider>
   );
 };
 

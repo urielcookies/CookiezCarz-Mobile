@@ -11,7 +11,7 @@ const Login = ({setAuthenticated}: {setAuthenticated: Function}) => {
     const data = JSON.stringify({email, password})
     login(data)
       .then(async ({data}: {data: string}) => {
-        await AsyncStorage.setItem('token', data)
+        await AsyncStorage.setItem('token', data);
         setAuthenticated(true);
       })
       .catch((error: object) => console.log(error));

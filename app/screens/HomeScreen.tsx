@@ -1,5 +1,7 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
+import {Button} from 'react-native-elements';
+
 import styled from 'styled-components/native'
 
 const StyledView = styled.View`
@@ -14,6 +16,7 @@ const Home = () => {
   return (
     <StyledView>
       <StyledText>Home</StyledText>
+      <Button title="Hey!" />
     </StyledView>
   )
 }
