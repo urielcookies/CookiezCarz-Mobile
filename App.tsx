@@ -34,15 +34,23 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 declare const global: {HermesInternal: null | {}};
 
-interface Navigate {
-  navigate: Function;
-  push: Function;
-  goBack: Function;
-  popToTop: Function;
+interface Route {
+  params: {
+    itemId: String;
+    otherParam: String;
+    name: String;
+  };
 }
 
 interface Navigation {
-  navigation: Navigate;
+  navigation: {
+    navigate: Function;
+    push: Function;
+    goBack: Function;
+    popToTop: Function;
+    setOptions: Function;
+  };
+  route: Route;
 }
 
 function HomeScreen({navigation}: Navigation) {
@@ -51,19 +59,39 @@ function HomeScreen({navigation}: Navigation) {
       <Text>Home Screen</Text>
       <Button
         title="Go to Details"
-        onPress={() => navigation.navigate('Details')}
+        onPress={() =>
+          navigation.navigate('Details', {
+            itemId: 86,
+            otherParam: 'anything you want here',
+            name: 'sup',
+          })
+        }
+      />
+
+      <Button
+        title="Update the title"
+        onPress={() => navigation.setOptions({title: 'Updated!'})}
       />
     </View>
   );
 }
 
-function DetailsScreen({navigation}: Navigation) {
+function DetailsScreen({route, navigation}: Navigation) {
+  const {itemId, otherParam} = route.params;
+
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Text>Details Screen</Text>
+      <Text>itemId: {JSON.stringify(itemId)}</Text>
+      <Text>otherParam: {JSON.stringify(otherParam)}</Text>
+
       <Button
         title="Go to Details... again"
-        onPress={() => navigation.push('Details')}
+        onPress={() =>
+          navigation.push('Details', {
+            itemId: Math.floor(Math.random() * 100),
+          })
+        }
       />
       <Button title="Go to Home" onPress={() => navigation.navigate('Home')} />
       <Button title="Go back" onPress={() => navigation.goBack()} />
@@ -84,12 +112,25 @@ const App = () => {
         <Stack.Screen
           name="Home"
           component={HomeScreen}
-          options={{title: 'Overview'}}
+          options={{
+            title: 'My home',
+            headerStyle: {
+              backgroundColor: '#f4511e',
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          }}
         />
         <Stack.Screen
           name="Details"
           component={DetailsScreen}
           options={{title: 'Details'}}
+          initialParams={{itemId: 42}}
+          // options={(navigation: Navigation) => ({
+          //   title: navigation.route.params.name,
+          // })}
         />
       </Stack.Navigator>
     </NavigationContainer>
