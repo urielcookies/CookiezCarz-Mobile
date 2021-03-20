@@ -10,6 +10,7 @@
 
 import React from 'react';
 import {
+  Button,
   SafeAreaView,
   StyleSheet,
   ScrollView,
@@ -26,9 +27,28 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+interface Route {
+  params: {
+    itemId: String;
+    otherParam: String;
+    name: String;
+  };
+}
+
+interface Navigation {
+  navigation: {
+    navigate: Function;
+    push: Function;
+    goBack: Function;
+    popToTop: Function;
+    setOptions: Function;
+  };
+  route: Route;
+}
+
 declare const global: {HermesInternal: null | {}};
 
-const App = () => {
+const Home = ({navigation}: Navigation) => {
   return (
     <>
       <StatusBar barStyle="dark-content" />
@@ -69,6 +89,23 @@ const App = () => {
               </Text>
             </View>
             <LearnMoreLinks />
+
+            <Text>Home Screen</Text>
+            <Button
+              title="Go to Settings"
+              onPress={() =>
+                navigation.navigate('Settings', {
+                  itemId: 86,
+                  otherParam: 'anything you want here',
+                  name: 'sup',
+                })
+              }
+            />
+
+            <Button
+              title="Update the title"
+              onPress={() => navigation.setOptions({title: 'Updated!'})}
+            />
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -115,4 +152,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default Home;
