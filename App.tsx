@@ -12,6 +12,8 @@ import 'react-native-gesture-handler';
 
 import React from 'react';
 import {Text} from 'react-native';
+import { Icon } from 'react-native-elements';
+
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
@@ -27,7 +29,8 @@ const App = () => {
         screenOptions={({route}) => ({
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           tabBarIcon: ({focused, color, size}) => {
-            return <Text>{route.name} Icon</Text>;
+            const iconName = route.name === 'Home' ? 'home' : 'settings';
+            return <Icon name={iconName} type="ionicon" color={color} />;
           },
         })}
         tabBarOptions={{
