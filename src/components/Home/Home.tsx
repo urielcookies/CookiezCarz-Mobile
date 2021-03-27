@@ -16,6 +16,7 @@ import HomeStyle from './HomeStyle';
 
 import {get} from 'axios';
 
+
 interface Route {
   params: {
     itemId: String;
