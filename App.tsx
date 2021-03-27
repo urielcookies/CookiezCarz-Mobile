@@ -11,8 +11,7 @@
 import 'react-native-gesture-handler';
 
 import React from 'react';
-import {Text} from 'react-native';
-import { Icon } from 'react-native-elements';
+import {Icon} from 'react-native-elements';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -41,7 +40,7 @@ const App = () => {
           name="Home"
           component={HomeScreen}
           options={{
-            title: 'My home',
+            title: 'Home',
             // tabBarBadge: 3,
             // headerStyle: {
             //   // backgroundColor: '#f4511e',

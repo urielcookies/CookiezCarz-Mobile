@@ -8,24 +8,13 @@
  * @format
  */
 
-import React from 'react';
-import {
-  Button,
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
+import {Divider, Text, Tile} from 'react-native-elements';
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import HomeStyle from './HomeStyle';
+
+import {get} from 'axios';
 
 interface Route {
   params: {
@@ -46,65 +35,74 @@ interface Navigation {
   route: Route;
 }
 
-declare const global: {HermesInternal: null | {}};
+const getActiveUsername = async (setActiveUser) => {
+  const URL =
+    'https://carlistapi.azurewebsites.net/api/useraccounts/getuserinfo';
+  const headers = {
+    'Content-Type': 'application/json',
+    token:
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVyaWVsNjIxQGxpdmUuY29tIiwibmJmIjoxNjE2ODE2MDcxLCJleHAiOjE2NDgzNTIwNzEsImlhdCI6MTYxNjgxNjA3MX0.bptbLwXVIQNF4kNWSnXYoN13JXhHZcKtzqFxT8gQhb8',
+  };
+  const response = await get(URL, {headers}).catch((error: any) =>
+    console.log(error),
+  );
+  setActiveUser(response.data);
+};
 
 const Home = ({navigation}: Navigation) => {
+  const [activeUser, setActiveUser] = useState({});
+  useEffect(() => {
+    getActiveUsername(setActiveUser);
+  }, []);
+
+  const onPressHandler = () => {
+    console.log('ONPRESS EVENT');
+  };
+
   return (
     <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
+      <SafeAreaView style={styles.SafeAreaView}>
         <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.tsx</Text> to change
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
+          style={styles.ScrollView}
+          contentInsetAdjustmentBehavior="automatic">
+          <View>
+            <Text h3>Home</Text>
+          </View>
 
-            <Text>Home Screen</Text>
-            <Button
-              title="Go to Settings"
-              onPress={() =>
-                navigation.navigate('Settings', {
-                  itemId: 86,
-                  otherParam: 'anything you want here',
-                  name: 'sup',
-                })
-              }
-            />
+          <View>
+            <Divider style={styles.Divider} />
+          </View>
 
-            <Button
-              title="Update the title"
-              onPress={() => navigation.setOptions({title: 'Updated!'})}
+          <View>
+            <Tile
+              featured
+              onPress={onPressHandler}
+              title={activeUser.Username}
+              titleStyle={{
+                color: 'black',
+                fontSize: 18,
+                paddingLeft: 0,
+                paddingRight: 0,
+              }}
+              caption={activeUser.Email}
+              captionStyle={{
+                color: 'grey',
+                marginTop: -10,
+                fontSize: 13,
+                paddingLeft: 0,
+                paddingRight: 0,
+              }}
+              overlayContainerStyle={{
+                backgroundColor: 'white',
+                borderColor: 'grey',
+                borderRadius: 3,
+                borderWidth: 0.5,
+                paddingLeft: 0,
+                paddingRight: 0,
+              }}
+              icon={{name: 'folder-open-o', type: 'font-awesome', size: 35}}
+              height={120}
+              width={160}
             />
           </View>
         </ScrollView>
@@ -114,41 +112,17 @@ const Home = ({navigation}: Navigation) => {
 };
 
 const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
+  Divider: {
+    marginTop: 5,
+    marginBottom: 5,
   },
-  engine: {
-    position: 'absolute',
-    right: 0,
+  SafeAreaView: {
+    flex: 1,
+    backgroundColor: 'white',
   },
-  body: {
-    backgroundColor: Colors.white,
-  },
-  sectionContainer: {
+  ScrollView: {
     marginTop: 32,
     paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
   },
 });
 
