@@ -74,7 +74,11 @@ const Home = (/*{navigation}: Navigation*/) => {
             <Divider style={styles.Divider} />
           </View>
 
-          <UserCard activeUser={activeUser} onPressHandler={onPressHandler} />
+          <View style={styles.View}>
+            <UserCard activeUser={activeUser} onPressHandler={onPressHandler} />
+            <UserCard activeUser={activeUser} onPressHandler={onPressHandler} />
+            <UserCard activeUser={activeUser} onPressHandler={onPressHandler} />
+          </View>
         </ScrollView>
       </SafeAreaView>
     </>
@@ -93,6 +97,11 @@ const styles = StyleSheet.create({
   ScrollView: {
     marginTop: 32,
     paddingHorizontal: 24,
+  },
+  View: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
   },
 });
 

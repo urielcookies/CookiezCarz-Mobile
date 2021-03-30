@@ -1,9 +1,11 @@
 import React from 'react';
-import {GestureResponderEvent} from 'react-native';
-import {StyleSheet, View} from 'react-native';
-
-import {Tile} from 'react-native-elements';
-
+import {
+  GestureResponderEvent,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import {Icon, Text} from 'react-native-elements';
 interface UserCardProps {
   activeUser: {
     Username: string;
@@ -15,41 +17,33 @@ interface UserCardProps {
 const UserCard = (props: UserCardProps) => {
   const {activeUser, onPressHandler} = props;
   return (
-    <View>
-      <Tile
-        featured
-        onPress={onPressHandler}
-        title={activeUser.Username}
-        titleStyle={{
-          color: 'black',
-          fontSize: 18,
-          paddingLeft: 0,
-          paddingRight: 0,
-        }}
-        caption={activeUser.Email}
-        captionStyle={{
-          color: 'grey',
-          marginTop: -10,
-          fontSize: 13,
-          paddingLeft: 0,
-          paddingRight: 0,
-        }}
-        overlayContainerStyle={{
-          backgroundColor: 'white',
-          borderColor: 'grey',
-          borderRadius: 3,
-          borderWidth: 0.5,
-          paddingLeft: 0,
-          paddingRight: 0,
-        }}
-        icon={{name: 'folder-open-o', type: 'font-awesome', size: 35}}
-        height={120}
-        width={160}
-      />
-    </View>
+    <TouchableOpacity style={styles.TouchableOpacity} onPress={onPressHandler}>
+      <Icon name="folder-open-o" type="font-awesome" size={30} />
+
+      <Text style={styles.Username}>{activeUser.Username}</Text>
+      <Text style={styles.Email}>{activeUser.Email}</Text>
+    </TouchableOpacity>
   );
 };
 
 export default UserCard;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  Username: {
+    fontSize: 18,
+  },
+  Email: {
+    color: 'grey',
+    fontSize: 14,
+  },
+  TouchableOpacity: {
+    height: 120,
+    width: 160,
+    borderColor: 'grey',
+    borderWidth: 1,
+    justifyContent: 'center', //Centered vertically
+    alignItems: 'center', // Centered horizontally
+    marginTop: 10,
+    marginBottom: 10,
+  },
+});
