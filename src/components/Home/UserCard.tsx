@@ -3,10 +3,11 @@ import {
   GestureResponderEvent,
   StyleSheet,
   TouchableOpacity,
-  View,
 } from 'react-native';
 import {Icon, Text} from 'react-native-elements';
+
 interface UserCardProps {
+  key: number;
   activeUser: {
     Username: string;
     Email: string;
@@ -14,17 +15,13 @@ interface UserCardProps {
   onPressHandler: (event: GestureResponderEvent) => void;
 }
 
-const UserCard = (props: UserCardProps) => {
-  const {activeUser, onPressHandler} = props;
-  return (
-    <TouchableOpacity style={styles.TouchableOpacity} onPress={onPressHandler}>
-      <Icon name="folder-open-o" type="font-awesome" size={30} />
-
-      <Text style={styles.Username}>{activeUser.Username}</Text>
-      <Text style={styles.Email}>{activeUser.Email}</Text>
-    </TouchableOpacity>
-  );
-};
+const UserCard = ({activeUser, onPressHandler}: UserCardProps) => (
+  <TouchableOpacity style={styles.TouchableOpacity} onPress={onPressHandler}>
+    <Icon name="folder-open-o" type="font-awesome" size={30} />
+    <Text style={styles.Username}>{activeUser.Username}</Text>
+    <Text style={styles.Email}>{activeUser.Email}</Text>
+  </TouchableOpacity>
+);
 
 export default UserCard;
 

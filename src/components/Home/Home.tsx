@@ -9,13 +9,13 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
-import {Divider, Text, Tile} from 'react-native-elements';
+import {SafeAreaView, StyleSheet, View} from 'react-native';
+import {Divider, Text} from 'react-native-elements';
+
+import {isEmpty, map} from 'lodash';
+import get from 'axios';
 
 import UserCard from './UserCard';
-import HomeStyle from './HomeStyle';
-
-import {get} from 'axios';
 
 // interface Route {
 //   params: {
@@ -36,24 +36,45 @@ import {get} from 'axios';
 //   route: Route;
 // }
 
+interface users {
+  Id: number;
+  Username: string;
+  Email: string;
+}
+
+const URL = 'https://carlistapi.azurewebsites.net/api';
+const headers = {
+  'Content-Type': 'application/json',
+  token:
+    // 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVyaWVsNjIxQGxpdmUuY29tIiwibmJmIjoxNjE2ODE2MDcxLCJleHAiOjE2NDgzNTIwNzEsImlhdCI6MTYxNjgxNjA3MX0.bptbLwXVIQNF4kNWSnXYoN13JXhHZcKtzqFxT8gQhb8',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVnNjIxQGxpdmUuY29tIiwibmJmIjoxNjE3MTQ4OTIwLCJleHAiOjE2NDg2ODQ5MjAsImlhdCI6MTYxNzE0ODkyMH0.7pr0OvTxOzudJAqCkZG80bMuHKT_LmAO4eZ7LNYyM8M',
+};
+
 const getActiveUsername = async (setActiveUser: Function) => {
-  const URL =
-    'https://carlistapi.azurewebsites.net/api/useraccounts/getuserinfo';
-  const headers = {
-    'Content-Type': 'application/json',
-    token:
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVyaWVsNjIxQGxpdmUuY29tIiwibmJmIjoxNjE2ODE2MDcxLCJleHAiOjE2NDgzNTIwNzEsImlhdCI6MTYxNjgxNjA3MX0.bptbLwXVIQNF4kNWSnXYoN13JXhHZcKtzqFxT8gQhb8',
-  };
-  const response = await get(URL, {headers}).catch((error: any) =>
-    console.log(error),
-  );
+  const response = await get(`${URL}/useraccounts/getuserinfo`, {
+    headers,
+  }).catch((error: any) => console.log(error));
   setActiveUser(response.data);
 };
 
+const fetchUsers = async (setUsers: Function) => {
+  const response = await get(`${URL}/caraccess/getusernames`, {
+    headers,
+  }).catch((error: any) => console.log(error));
+  setUsers(response.data);
+};
+
 const Home = (/*{navigation}: Navigation*/) => {
-  const [activeUser, setActiveUser] = useState({Username: '', Email: ''});
+  const [activeUser, setActiveUser] = useState({
+    Id: 0,
+    Username: '',
+    Email: '',
+  });
+  const [users, setUsers] = useState([]);
+
   useEffect(() => {
     getActiveUsername(setActiveUser);
+    fetchUsers(setUsers);
   }, []);
 
   const onPressHandler = () => {
@@ -63,9 +84,7 @@ const Home = (/*{navigation}: Navigation*/) => {
   return (
     <>
       <SafeAreaView style={styles.SafeAreaView}>
-        <ScrollView
-          style={styles.ScrollView}
-          contentInsetAdjustmentBehavior="automatic">
+        <View style={styles.ScrollView}>
           <View>
             <Text h3>Home</Text>
           </View>
@@ -75,11 +94,23 @@ const Home = (/*{navigation}: Navigation*/) => {
           </View>
 
           <View style={styles.View}>
-            <UserCard activeUser={activeUser} onPressHandler={onPressHandler} />
-            <UserCard activeUser={activeUser} onPressHandler={onPressHandler} />
-            <UserCard activeUser={activeUser} onPressHandler={onPressHandler} />
+            {Boolean(activeUser.Id) && (
+              <UserCard
+                key={activeUser.Id}
+                activeUser={activeUser}
+                onPressHandler={onPressHandler}
+              />
+            )}
+            {!isEmpty(users) &&
+              map(users, ({Id, Username, Email}: users) => (
+                <UserCard
+                  key={Id}
+                  activeUser={{Username, Email}}
+                  onPressHandler={onPressHandler}
+                />
+              ))}
           </View>
-        </ScrollView>
+        </View>
       </SafeAreaView>
     </>
   );
